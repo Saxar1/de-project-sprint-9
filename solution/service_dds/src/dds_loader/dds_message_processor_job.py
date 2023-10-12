@@ -32,7 +32,9 @@ class DdsMessageProcessor:
             order_builder = OrderDdsBuilder()
             order_builder.init(order)  
 
-            # Собираем объекты:
+            # |-------------------|
+            # | Собираем объекты: |
+            # |-------------------|
             # =============Хабы=============
             h_user_object = order_builder.h_user()
             h_product_object = order_builder.h_product()
@@ -40,8 +42,25 @@ class DdsMessageProcessor:
             h_order_object = order_builder.h_order()  
             h_restaurant_object = order_builder.h_restaurant()
 
+            # =============Линки=============    
+            # Собираем атрибуты в словарь с обрабатываемого объекта
+            user = h_user_object.dict()
+            ord = h_order_object.dict()
+            h_product_pks = [h_product.h_product_pk for h_product in h_product_object]
+            h_category_pks = [h_category.h_category_pk for h_category in h_category_object]
+            rest = h_restaurant_object.dict()
 
-            # Загружаем данные в PostgreSQL:
+            # Создаем линки: 
+            l_order_user_obj = order_builder.l_order_user(user['h_user_pk'], ord['h_order_pk'])  
+            l_order_product_obj = order_builder.l_order_product(h_product_pks, ord['h_order_pk']) 
+            l_product_category_obj = order_builder.l_product_category(h_product_pks, h_category_pks)
+            l_product_restaurant_obj = order_builder.l_product_restaurant(rest['h_restaurant_pk'], h_product_pks)
+            
+            # =============Сателлиты=============
+
+            # |--------------------------------|
+            # | Загружаем данные в PostgreSQL: |
+            # |--------------------------------|
             # =============Хабы=============
             self._dds_repository.h_user_insert(h_user_object)
             self._dds_repository.h_product_insert(h_product_object)
@@ -49,7 +68,13 @@ class DdsMessageProcessor:
             self._dds_repository.h_order_insert(h_order_object)
             self._dds_repository.h_restaurant_insert(h_restaurant_object)
 
+            # =============Линки=============
+            self._dds_repository.l_order_user_insert(l_order_user_obj)
+            self._dds_repository.l_order_product_insert(l_order_product_obj)
+            self._dds_repository.l_product_category_insert(l_product_category_obj)
+            self._dds_repository.l_product_restaurant_insert(l_product_restaurant_obj)
 
+            # =============Сателлиты=============
 
             # msg_prod = {"id": str(p.h_product_pk),
             #            "name": p_names[p.h_product_pk],

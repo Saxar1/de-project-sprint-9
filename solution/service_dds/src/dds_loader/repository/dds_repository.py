@@ -2,11 +2,12 @@ from typing import Any, Dict, List
 from lib.pg import PgConnect
 
 from .objects import H_User, H_Product, H_Category, H_Order, H_Restaurant
+from .objects import L_order_user, L_order_product, L_product_category, L_product_restaurant
     
 class DdsRepository:
     def __init__(self, db: PgConnect) -> None:
         self._db = db
-        
+    # ========================================ХАБЫ========================================    
     def h_user_insert(self, user: H_User) -> None:
         with self._db.connection() as conn:
             with conn.cursor() as cur:
@@ -146,3 +147,130 @@ class DdsRepository:
                         'load_src': restaurant.load_src
                     }
                 )
+
+    # ========================================ЛИНКИ========================================
+    def l_order_user_insert(self, l_order_user: L_order_user) -> None:
+        with self._db.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                        INSERT INTO dds.l_order_user(
+                            hk_order_user_pk,
+                            h_user_pk,
+                            h_order_pk,
+                            load_dt,
+                            load_src
+                        )
+                        VALUES(
+                            %(hk_order_user_pk)s,
+                            %(h_user_pk)s,
+                            %(h_order_pk)s,
+                            %(load_dt)s,
+                            %(load_src)s
+                        )
+                        ON CONFLICT (hk_order_user_pk) DO NOTHING;
+                    """,
+                    {
+                        'hk_order_user_pk': l_order_user.hk_order_user_pk,
+                        'h_user_pk': l_order_user.h_user_pk,
+                        'h_order_pk': l_order_user.h_order_pk,
+                        'load_dt': l_order_user.load_dt,
+                        'load_src': l_order_user.load_src
+                    }
+                )
+
+    def l_order_product_insert(self, objs: List[L_order_product]) -> None:
+        with self._db.connection() as conn:
+            with conn.cursor() as cur:
+                for obj in objs:
+                    cur.execute(
+                        """
+                            INSERT INTO dds.l_order_product(
+                                hk_order_product_pk,
+                                h_product_pk,
+                                h_order_pk,
+                                load_dt,
+                                load_src
+                            )
+                            VALUES(
+                                %(hk_order_product_pk)s,
+                                %(h_product_pk)s,
+                                %(h_order_pk)s,
+                                %(load_dt)s,
+                                %(load_src)s
+                            )
+                            ON CONFLICT (hk_order_product_pk) DO NOTHING;
+                        """,
+                        {
+                            'hk_order_product_pk': obj.hk_order_product_pk,
+                            'h_product_pk': obj.h_product_pk,
+                            'h_order_pk': obj.h_order_pk,
+                            'load_dt': obj.load_dt,
+                            'load_src': obj.load_src
+                        }
+                    )
+
+    def l_product_category_insert(self, objs: List[L_product_category]) -> None:
+        with self._db.connection() as conn:
+            with conn.cursor() as cur:
+                for obj in objs:
+                    cur.execute(
+                        """
+                            INSERT INTO dds.l_product_category(
+                                hk_product_category_pk,
+                                h_product_pk,
+                                h_category_pk,
+                                load_dt,
+                                load_src
+                            )
+                            VALUES(
+                                %(hk_product_category_pk)s,
+                                %(h_product_pk)s,
+                                %(h_category_pk)s,
+                                %(load_dt)s,
+                                %(load_src)s
+                            )
+                            ON CONFLICT (hk_product_category_pk) DO NOTHING;
+                        """,
+                        {
+                            'hk_product_category_pk': obj.hk_product_category_pk,
+                            'h_product_pk': obj.h_product_pk,
+                            'h_category_pk': obj.h_category_pk,
+                            'load_dt': obj.load_dt,
+                            'load_src': obj.load_src
+                        }
+                    )
+
+    def l_product_restaurant_insert(self, objs: List[L_product_restaurant]) -> None:
+        with self._db.connection() as conn:
+            with conn.cursor() as cur:
+                for obj in objs:
+                    cur.execute(
+                        """
+                            INSERT INTO dds.l_product_restaurant(
+                                hk_product_restaurant_pk,
+                                h_restaurant_pk,
+                                h_product_pk,
+                                load_dt,
+                                load_src
+                            )
+                            VALUES(
+                                %(hk_product_restaurant_pk)s,
+                                %(h_restaurant_pk)s,
+                                %(h_product_pk)s,
+                                %(load_dt)s,
+                                %(load_src)s
+                            )
+                            ON CONFLICT (hk_product_restaurant_pk) DO NOTHING;
+                        """,
+                        {
+                            'hk_product_restaurant_pk': obj.hk_product_restaurant_pk,
+                            'h_restaurant_pk': obj.h_restaurant_pk,
+                            'h_product_pk': obj.h_product_pk,
+                            'load_dt': obj.load_dt,
+                            'load_src': obj.load_src
+                        }
+                    )
+
+    # ========================================САТЕЛЛИТЫ========================================
+    
