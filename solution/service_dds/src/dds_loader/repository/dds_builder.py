@@ -4,6 +4,7 @@ from typing import Any, Dict, List
 
 from .objects import H_User, H_Product, H_Category, H_Order, H_Restaurant
 from .objects import L_order_user, L_order_product, L_product_category, L_product_restaurant
+from .objects import S_order_cost, S_order_status, S_product_names, S_restaurant_names, S_user_names
 
 class OrderDdsBuilder:
     def init(self, dict: Dict) -> None:
@@ -127,4 +128,61 @@ class OrderDdsBuilder:
         return product_restaurant
     
     # ========================================САТЕЛЛИТЫ========================================
+    def s_order_cost(self, h_order_pk: uuid.UUID) -> S_order_cost:
+        cost = self._dict['cost']
+        payment = self._dict['payment']
+        return S_order_cost(
+            h_order_pk=h_order_pk,
+            cost=cost,
+            payment=payment,
+            load_dt=datetime.utcnow(),
+            load_src=self.source_system,
+            hk_order_cost_hashdiff=self._uuid(h_order_pk)
+        )
     
+    def s_order_status(self, h_order_pk: uuid.UUID) -> S_order_status:
+        status = self._dict['status']
+        return S_order_status(
+            h_order_pk=h_order_pk,
+            status=status,
+            load_dt=datetime.utcnow(),
+            load_src=self.source_system,
+            hk_order_status_hashdiff=self._uuid(h_order_pk)
+        )
+    
+    def s_product_names(self, h_product_pk_list: List[uuid.UUID]) -> List[S_product_names]:
+        product_names = []
+        for product in self._dict["products"]:
+            if self._uuid(product["id"]) in h_product_pk_list:
+                product_names.append(
+                    S_product_names(
+                        h_product_pk=self._uuid(product["id"]),
+                        name=product["name"],
+                        load_dt=datetime.utcnow(),
+                        load_src=self.source_system,
+                        hk_product_names_hashdiff=self._uuid(product["id"])
+                    )
+                )
+        return product_names
+
+    def s_restaurant_names(self, h_restaurant_pk: uuid.UUID) -> S_restaurant_names:
+        name = self._dict['restaurant']['name']
+        return S_restaurant_names(
+            h_restaurant_pk=h_restaurant_pk,
+            name=name,
+            load_dt=datetime.utcnow(),
+            load_src=self.source_system,
+            hk_restaurant_names_hashdiff=self._uuid(h_restaurant_pk)
+        )
+    
+    def s_user_names(self, h_user_pk: uuid.UUID) -> S_user_names:
+        username = self._dict['user']['name']
+        userlogin = self._dict['user']['login']
+        return S_user_names(
+            h_user_pk=h_user_pk,
+            username=username,
+            userlogin=userlogin,
+            load_dt=datetime.utcnow(),
+            load_src=self.source_system,
+            hk_user_names_hashdiff=self._uuid(h_user_pk)
+        )

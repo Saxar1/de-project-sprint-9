@@ -57,6 +57,11 @@ class DdsMessageProcessor:
             l_product_restaurant_obj = order_builder.l_product_restaurant(rest['h_restaurant_pk'], h_product_pks)
             
             # =============Сателлиты=============
+            s_order_cost_obj = order_builder.s_order_cost(ord['h_order_pk'])
+            s_order_status_obj = order_builder.s_order_status(ord['h_order_pk'])
+            s_product_names_obj = order_builder.s_product_names(h_product_pks)
+            s_restaurant_names_obj = order_builder.s_restaurant_names(rest['h_restaurant_pk'])
+            s_user_names_obj = order_builder.s_user_names(user['h_user_pk'])
 
             # |--------------------------------|
             # | Загружаем данные в PostgreSQL: |
@@ -75,6 +80,11 @@ class DdsMessageProcessor:
             self._dds_repository.l_product_restaurant_insert(l_product_restaurant_obj)
 
             # =============Сателлиты=============
+            self._dds_repository.s_order_cost_insert(s_order_cost_obj)
+            self._dds_repository.s_order_status_insert(s_order_status_obj)
+            self._dds_repository.s_product_names_insert(s_product_names_obj)
+            self._dds_repository.s_restaurant_names_insert(s_restaurant_names_obj)
+            self._dds_repository.s_user_names_insert(s_user_names_obj)
 
             # msg_prod = {"id": str(p.h_product_pk),
             #            "name": p_names[p.h_product_pk],

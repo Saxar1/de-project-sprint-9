@@ -100,3 +100,4 @@ class S_user_names(BaseModel):
     userlogin: str 
     load_dt: datetime
     load_src: str 
+    hk_user_names_hashdiff: uuid.UUID
