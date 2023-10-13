@@ -1,5 +1,6 @@
 from datetime import datetime
 from logging import Logger
+from typing import List, Dict
 
 from lib.kafka_connect import KafkaConsumer, KafkaProducer
 from .repository import DdsRepository, OrderDdsBuilder
@@ -86,12 +87,27 @@ class DdsMessageProcessor:
             self._dds_repository.s_restaurant_names_insert(s_restaurant_names_obj)
             self._dds_repository.s_user_names_insert(s_user_names_obj)
 
-            # msg_prod = {"id": str(p.h_product_pk),
-            #            "name": p_names[p.h_product_pk],
-            #            "category": prod_cats[p.h_product_pk]
-            # }
+            msg_prod = {
+                "user_id": user['h_user_pk'],
+                "product": self._format_products(s_product_names_obj),
+                "category": self._format_categories(h_category_object)
+            }
 
-            # self._producer.produce(dst_msg)
+            self._producer.produce(msg_prod)
             self._logger.info(f"{datetime.utcnow()}. Message Sent")
 
         self._logger.info(f"{datetime.utcnow()}: FINISH")
+
+    def _format_products(product_names: list) -> List[Dict[str, str]]:
+        prod_names = []
+        for prod in product_names:
+            prod_names.append({"id": str(prod.h_product_pk), 
+                               "name": prod.name})
+        return prod_names
+    
+    def _format_categories(category_names: list) -> List[Dict[str, str]]:
+        cat_names = []
+        for cat in category_names:
+            cat_names.append({"id": str(cat.h_category_pk), 
+                               "name": cat.category_name})
+        return cat_names

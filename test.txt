@@ -1,11 +1,11 @@
 export KUBECONFIG=/home/saxarok/Desktop/kubeconfig
 
 в директории с dockerfile
-sudo docker build . -t cr.yandex/crpum2q4frc77dsas1qd/stg-service:v2023-10-08-r1
-sudo docker push cr.yandex/crpum2q4frc77dsas1qd/stg-service:v2023-10-08-r1
+sudo docker build . -t cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-13-r1
+sudo docker push cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-13-r1
 
 в директории с service_stg
-helm upgrade --install --atomic stg-service app -n c14-stepan-starczev
+helm upgrade --install --atomic dds-service app -n c14-stepan-starczev
 
 
 ОБНОВЛЕНИЕ ДАННЫХ В REDIS
@@ -66,7 +66,7 @@ EOF
 
 kafkacat -C \
          -b rc1a-vnj01ua1un60cv7t.mdb.yandexcloud.net:9091 \
-         -t stg-service-orders \
+         -t dds-service-orders \
          -X security.protocol=SASL_SSL \
          -X sasl.mechanism=SCRAM-SHA-512 \
          -X sasl.username="producer_consumer" \
@@ -75,7 +75,7 @@ kafkacat -C \
 
 kafkacat -C \
          -b rc1a-vnj01ua1un60cv7t.mdb.yandexcloud.net:9091 \
-         -t order-service_orders \
+         -t stg-service-orders \
          -X security.protocol=SASL_SSL \
          -X sasl.mechanism=SCRAM-SHA-512 \
          -X sasl.username="producer_consumer" \
