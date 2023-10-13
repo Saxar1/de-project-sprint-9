@@ -98,14 +98,14 @@ class DdsMessageProcessor:
 
         self._logger.info(f"{datetime.utcnow()}: FINISH")
 
-    def _format_products(product_names: list) -> List[Dict[str, str]]:
+    def _format_products(self, product_names: list) -> List[Dict[str, str]]:
         prod_names = []
         for prod in product_names:
             prod_names.append({"id": str(prod.h_product_pk), 
                                "name": prod.name})
         return prod_names
     
-    def _format_categories(category_names: list) -> List[Dict[str, str]]:
+    def _format_categories(self, category_names: list) -> List[Dict[str, str]]:
         cat_names = []
         for cat in category_names:
             cat_names.append({"id": str(cat.h_category_pk), 
