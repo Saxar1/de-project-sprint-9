@@ -92,8 +92,6 @@ NULL:{"object_id": 2745325, "object_type": "order", "sent_dttm": "2023-10-07 22:
 ---------------------------------------------------------------------------------------------------------------------------------
 Для DDS:
 в директории с dockerfile
-sudo docker build . -t cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-15-r1
-sudo docker push cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-15-r1
-
-в директории с service_dds
+sudo docker build . -t cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-15-r2
+sudo docker push cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-15-r2
 helm upgrade --install --atomic dds-service app -n c14-stepan-starczev
