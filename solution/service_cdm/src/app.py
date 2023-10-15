@@ -23,7 +23,6 @@ if __name__ == '__main__':
 
     proc = CdmMessageProcessor(
         consumer=config.kafka_consumer(),
-        # producer=config.kafka_producer(),
         cdm_repository=CdmRepository(config.pg_warehouse_db()),
         batch_size=100,
         logger=app.logger
