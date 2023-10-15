@@ -18,7 +18,6 @@ class KafkaProducer:
             'sasl.username': user,
             'sasl.password': password,
             'error_cb': error_callback,
-            'debug': 'topic'
         }
 
         self.topic = topic
@@ -50,7 +49,7 @@ class KafkaConsumer:
             'auto.offset.reset': 'earliest',
             'enable.auto.commit': False,
             'error_cb': error_callback,
-            'debug': 'topic',
+            'debug': 'all',
             'client.id': 'someclientkey'
         }
 

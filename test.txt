@@ -2,9 +2,9 @@ export KUBECONFIG=/home/saxarok/Desktop/kubeconfig
 
 в директории с service_stg
 в директории с dockerfile
-sudo docker build . -t cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-13-r4
-sudo docker push cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-13-r4
-helm upgrade --install --atomic dds-service app -n c14-stepan-starczev
+sudo docker build . -t cr.yandex/crpum2q4frc77dsas1qd/stg-service:v2023-10-15-r1
+sudo docker push cr.yandex/crpum2q4frc77dsas1qd/stg-service:v2023-10-15-r1
+helm upgrade --install --atomic stg-service app -n c14-stepan-starczev
 
 
 ОБНОВЛЕНИЕ ДАННЫХ В REDIS
@@ -62,19 +62,19 @@ curl -X POST https://order-gen-service.sprint9.tgcloudenv.ru/register_kafka \
 EOF
 
 ПОЛУЧИТЬ СООБЩЕНИЕ KAFKA:
-
 kafkacat -C \
          -b rc1a-vnj01ua1un60cv7t.mdb.yandexcloud.net:9091 \
-         -t dds-service-orders \
+         -t stg-service-orders \
          -X security.protocol=SASL_SSL \
          -X sasl.mechanism=SCRAM-SHA-512 \
          -X sasl.username="producer_consumer" \
          -X sasl.password="saxarok1" \
          -X ssl.ca.location=/home/saxarok/Desktop/CA.pem -Z -K:
 
+
 kafkacat -C \
          -b rc1a-vnj01ua1un60cv7t.mdb.yandexcloud.net:9091 \
-         -t stg-service-orders \
+         -t dds-service-orders \
          -X security.protocol=SASL_SSL \
          -X sasl.mechanism=SCRAM-SHA-512 \
          -X sasl.username="producer_consumer" \
@@ -92,8 +92,8 @@ NULL:{"object_id": 2745325, "object_type": "order", "sent_dttm": "2023-10-07 22:
 ---------------------------------------------------------------------------------------------------------------------------------
 Для DDS:
 в директории с dockerfile
-sudo docker build . -t cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-08-r1
-sudo docker push cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-08-r1
+sudo docker build . -t cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-15-r1
+sudo docker push cr.yandex/crpum2q4frc77dsas1qd/dds-service:v2023-10-15-r1
 
-в директории с service_stg
+в директории с service_dds
 helm upgrade --install --atomic dds-service app -n c14-stepan-starczev
